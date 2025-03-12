@@ -1,0 +1,169 @@
+/* ----- Global Styles ----- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Arial", sans-serif;
+  }
+  
+  body {
+    background-color: #f5f7fa;
+    color: #333;
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  a {
+    text-decoration: none;
+    color: #0072ff;
+  }
+  
+  h1, h2, h3, h4 {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* ----- Profile Header Section ----- */
+  .profile-header {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    align-items: center;
+  }
+  
+  .profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+  }
+  
+  .profile-info {
+    flex: 1;
+    min-width: 250px;
+  }
+  
+  .profile-info h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .profile-info p {
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+  }
+  
+  /* Tag badges for skills or tech stacks */
+  .tags {
+    margin-top: 0.5rem;
+  }
+  
+
+  .tag {
+    display: inline-block;
+    padding: 0.3em 0.6em; /* Adjusts the vertical and horizontal spacing */
+    border-radius: 18px;   /* Rounded corners */
+    background-color: #e8e8e8;
+    color: #555;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  
+  /* ----- Projects Section ----- */
+  .section-title {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+  
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .project-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .project-card img {
+    width: 100%;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+    object-fit: cover;
+  }
+  
+  .project-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .project-tags {
+    margin-bottom: 0.5rem;
+  }
+  
+  .project-tags .tag {
+    background-color: #e6f0ff;
+    color: #0052cc;
+  }
+  
+  .project-description {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  /* ----- footer Section ----- */
+  /* Scroll Up Button Styles */
+  .pointer {
+    cursor: pointer;
+  }
+
+  .v2-text-hero-scroll {
+    color: #595959;
+    font-size: 1rem;
+  }
+
+
+  video {
+      pointer-events: none; /* Disable interactions with the video */
+  }
+
+  /* Hide play/pause overlay */
+  video::-webkit-media-controls {
+      display: none !important;
+  }
+
+  video::-webkit-media-controls-overlay-play-button {
+      display: none !important;
+  }
+
+  .scroll-up-container {
+    display: flex;              /* d-flex */
+    flex-direction: column;     /* flex-column */
+    justify-content: center;    /* justify-content-center */
+    align-items: center;        /* align-items-center */
+    text-align: center;         /* text-center */
+    padding: 1rem;              /* p-2 in Bootstrap is usually 0.5rem, adjust as needed */
+    flex-grow: 1;               /* flex-grow-1 (works if parent is also a flex container) */
+  }
+
+  .footer-like-section {
+    margin-top: 5rem;  /* Increase to add more space above */
+    margin-bottom: 1.3rem; /* Increase to add more space below */
+    padding: 2rem;     /* Optional: internal padding */
+    text-align: center;
+    /* Add any additional styling you want here */
+  }
+  
+  .vietnam-flag {
+    margin-bottom: 0.3rem; /* Adjust value as needed */
+  }

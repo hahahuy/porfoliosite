@@ -1,10 +1,13 @@
 from flask import Flask
-app = Flask(__name__)
 
-@app.route('/')
 def create_app():
-    # register routes from routes.py
+    app = Flask(__name__)
+
+    # Import and register blueprint before handling any request
     from .routes import main
     app.register_blueprint(main)
 
     return app
+
+# For simple deployment using a global app variable, you can create one instance:
+app = create_app()

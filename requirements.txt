@@ -1,4 +1,4 @@
 Flask==3.1.0
 python-chess
 gevent
-gunicorn
+gunicorn == 23.0.0

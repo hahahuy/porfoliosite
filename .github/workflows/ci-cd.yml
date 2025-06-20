@@ -52,8 +52,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y openssh-client
           mkdir -p ~/.ssh
-          # Avoid “host key verification” prompt
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          # Try to fetch the host key but don’t fail if it times out
+          ssh-keyscan -T 5 -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts || true
 
       # 3) Add the deploy private key
       - name: Configure SSH key

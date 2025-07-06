@@ -1,43 +1,50 @@
 name: CI & Deploy to EC2
 
+# 1) Run tests on PRs, and on every push to main
 on:
-  pull_request: { branches: [ main ] }
-  push:         { branches: [ main ] }
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
 
+# Shared environment
 env:
-  EC2_PATH:   ${{ secrets.EC2_PATH }}
-  PATH:       /home/ec2-user/porfoliosite/venv/bin:${{ env.PATH }}
-
-defaults:
-  run:
-    shell: bash -l {0}
+  EC2_PATH: ${{ secrets.EC2_PATH }}
 
 jobs:
   test:
+    name: 🧪 Build & Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v4
-        with: { python-version: '3.x' }
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-      - uses: actions/cache@v3
+      - name: Cache pip
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
 
-      - name: Install and test
+      - name: Install & run tests
         run: |
           pip install -r requirements.txt
           pytest --maxfail=1 --disable-warnings -q || true
 
   deploy:
-    if: github.event_name == 'push'
+    name: 🚀 Deploy to EC2
     needs: test
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 1 }
+      - name: Checkout code (shallow)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.7
@@ -48,5 +55,6 @@ jobs:
           script: |
             cd $EC2_PATH
             git pull origin main
+            source venv/bin/activate
             pip install -r requirements.txt
             sudo systemctl restart myapp

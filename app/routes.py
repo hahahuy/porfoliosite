@@ -11,6 +11,11 @@ def home():
 def about():
     return render_template('about.html')
 
+@main.route('/projects/<int:project_id>')
+def project(project_id):
+    # For now, just redirect to home page since we don't have individual project pages
+    return render_template('index.html')
+
 # ------------------------------------------------------------------
 # proxy to your GitHub Pages site at /dg
 # ------------------------------------------------------------------

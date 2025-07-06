@@ -1,47 +1,50 @@
 name: CI & Deploy to EC2
 
-# 1) Run tests on PRs, and on every push to main
+# Only run on code changes to your application (skip docs/README changes)
 on:
   pull_request:
     branches: [ main ]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
 
-# Shared environment
 env:
   EC2_PATH: ${{ secrets.EC2_PATH }}
 
 jobs:
-  test:
+  build:
     name: 🧪 Build & Test
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout full history
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # needed for caching and diff checks
 
-      - name: Set up Python
+      - name: Setup Python & cache deps
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+          cache: 'pip'            # built-in pip cache
 
-      - name: Cache pip
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-      - name: Install & run tests
-        run: |
-          pip install -r requirements.txt
-          pytest --maxfail=1 --disable-warnings -q || true
+      - name: Run tests
+        run: pytest --maxfail=1 --disable-warnings -q
 
   deploy:
     name: 🚀 Deploy to EC2
-    needs: test
+    needs: build
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code (shallow)
+      - name: Checkout latest commit
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
@@ -53,8 +56,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key:      ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd $EC2_PATH
-            git pull origin main
+            cd ${{ secrets.EC2_PATH }}
+            git pull --ff-only
             source venv/bin/activate
             pip install -r requirements.txt
             sudo systemctl restart myapp

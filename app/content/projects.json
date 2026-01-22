@@ -1,0 +1,42 @@
+[
+  {
+    "id": 0,
+    "title": "FIDE & Google Efficient Chess AI: A NNUE mini chess bot",
+    "description": "Sports fans across the country regularly discuss their favorite teams, players, coaches, etc. throughout each sports season. After all, a common passion connects people — and sports often bring people together. With so many opinions across different teams, what if we wanted to better understand...",
+    "image": "/static/images/header.png",
+    "tags": ["Python", "Neural Network Training", "Coding Contest", "Pytourch"],
+    "link": "/projects/0"
+  },
+  {
+    "id": 1,
+    "title": "Domesticated Animal Image Classification with Python",
+    "description": "In this use case, my colleagues and I collaborated on creating and optimizing a convolutional neural network in order to identify domesticated animals versus non-domesticated animals to assist in funding suggestions for local animal shelters. Using the CIFAR-10 dataset with over 60,000 images,...",
+    "image": "/static/images/header.png",
+    "tags": ["Scikit-Learn", "Tensorflow", "Pandas", "Python", "Jupyter"],
+    "link": "/projects/1"
+  },
+  {
+    "id": 2,
+    "title": "Using R Shiny to Inform Community Officials",
+    "description": "Using a leaflet interactive map, we created a multilevel, informational dashboard that enables community officials to develop better insights into their population, facilities, and areas in need. This project utilized data from Census reports, facilities information, housing, and abandoned...",
+    "image": "/static/images/header.png",
+    "tags": ["R", "R Shiny Web App", "Data Analytics"],
+    "link": "/projects/2"
+  },
+  {
+    "id": 3,
+    "title": "Identifying Malignant Tumors with Machine Learning",
+    "description": "Using data centered around the measurement of a variety of tumors, we created 3 machine learning models and compared the performance of each in classifying tumors as malignant or benign. We catered our approach, explanation, and demo towards medical professionals and explained a variety of model...",
+    "image": "/static/images/header.png",
+    "tags": ["Machine Learning", "R"],
+    "link": "/projects/3"
+  },
+  {
+    "id": 4,
+    "title": "Creating Customer Segmentations Predictions App with KMeans",
+    "description": "Using Pycaret to create a quick-n-easy KMeans model and deploying this model using Streamlit. Model deployed includes a GUI that enables the end user to add in a given data point to be classified into a cluster based on model predictions.",
+    "image": "/static/images/header.png",
+    "tags": ["Python", "Machine Learning", "Pycaret", "Pandas", "Streamlit"],
+    "link": "/projects/4"
+  }
+]

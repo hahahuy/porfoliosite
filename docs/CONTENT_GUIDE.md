@@ -420,5 +420,84 @@ After making changes:
 
 ---
 
+## Headless CMS Integration (Option 3)
+
+The site now supports Headless CMS integration for advanced content management. Supported CMS platforms:
+
+- **Strapi** (self-hosted)
+- **Contentful** (hosted)
+- **Sanity** (hosted)
+
+### Configuration
+
+Set the following environment variables:
+
+```bash
+CONTENT_SOURCE=cms_with_json_fallback  # or 'cms' for CMS-only
+CMS_TYPE=strapi  # or 'contentful', 'sanity', 'none'
+CMS_API_URL=https://your-cms-url.com
+CMS_API_KEY=your-api-key
+```
+
+### CMS-Specific Configuration
+
+**For Contentful:**
+```bash
+CMS_SPACE_ID=your-space-id
+CMS_ENVIRONMENT=master
+```
+
+**For Sanity:**
+```bash
+CMS_PROJECT_ID=your-project-id
+CMS_DATASET=production
+```
+
+### Content Priority
+
+When `CONTENT_SOURCE=cms_with_json_fallback`:
+1. Try to load from CMS
+2. If CMS fails or is unavailable, fallback to JSON files
+3. This ensures the site always works even if CMS is down
+
+### Syncing CMS to JSON
+
+Use the sync script to backup CMS content to JSON:
+
+```bash
+python scripts/sync_cms.py
+```
+
+This creates JSON backups of all CMS content, useful for:
+- Version control
+- Fallback when CMS is unavailable
+- Local development
+
+---
+
+## Contact Form (Option 2 - SQLite)
+
+The contact form uses SQLite database to store submissions.
+
+### Submitting Contact Forms
+
+Send POST request to `/contact`:
+
+```json
+{
+  "name": "Your Name",
+  "email": "your@email.com",
+  "message": "Your message here"
+}
+```
+
+### Viewing Submissions
+
+Submissions are stored in the database. Access via:
+- Database file: `instance/portfolio.db`
+- Model: `ContactSubmission` in `app/database/models.py`
+
+---
+
 *For structural improvements, see `STRUCTURE_RECOMMENDATIONS.md`*
 

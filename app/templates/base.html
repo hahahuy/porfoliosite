@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta property="og:title" content="{{ profile.name if profile else 'HQHuy Portfolio' }}'s Portfolio">
+    <meta property="og:image" content="/static/images/header.png">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <meta property="og:description" content="Portfolio site showcasing data science and machine learning projects.">
+    <meta property="og:url" content="{{ request.url }}">
+    
+    <link href="{{ url_for('static', filename='css/output.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inter.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font.css')}}">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ profile.name if profile else 'HQHuy' }} Portfolio | data analysis{% endblock %}</title>
+    
+    <style>
+        code {background-color: rgb(229 231 235);}
+        ul {list-style-type: disc; margin-left: 2.5rem;}
+    </style>
+    
+    <meta name="theme-color" content="#020AF5">
+    
+    {% block head %}{% endblock %}
+</head>
+
+<body class="antialiased text-gray-900 bg-[#fcfcfc]">
+    <div class="w-full bg-ds_blue h-[3px]"></div>
+    
+    {% block content %}{% endblock %}
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

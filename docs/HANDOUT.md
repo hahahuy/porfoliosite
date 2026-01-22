@@ -142,11 +142,11 @@ Current model:
 Recommended commands:
 
 ```bash
-sudo systemctl restart gunicorn
-sudo systemctl status gunicorn
+sudo systemctl restart myapp
+sudo systemctl status myapp
 ```
 
-If Gunicorn is not yet managed by systemd, this should be added before any production changes.
+Note: The systemd service is named `myapp` (not `gunicorn`). This service manages the Gunicorn process.
 
 ---
 

@@ -17,7 +17,13 @@ class CMSService:
         try:
             self.client = create_cms_client(self.config)
         except Exception as e:
-            current_app.logger.warning(f"Failed to initialize CMS client: {e}")
+            # Use try/except for current_app since it might not be available during initialization
+            try:
+                current_app.logger.warning(f"Failed to initialize CMS client: {e}")
+            except RuntimeError:
+                # Outside app context, just print to stderr
+                import sys
+                print(f"Warning: Failed to initialize CMS client: {e}", file=sys.stderr)
             self.client = None
     
     def is_available(self) -> bool:

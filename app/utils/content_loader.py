@@ -18,10 +18,23 @@ def load_content(filename: str) -> Any:
         FileNotFoundError: If the file doesn't exist
         json.JSONDecodeError: If the file contains invalid JSON
     """
-    content_path = Path(__file__).parent.parent / 'content' / filename
+    # Try multiple paths to handle different working directories
+    base_paths = [
+        Path(__file__).parent.parent / 'content' / filename,  # Relative to utils/
+        Path.cwd() / 'app' / 'content' / filename,  # From project root
+        Path(__file__).parent.parent.parent / 'app' / 'content' / filename,  # Alternative
+    ]
     
-    if not content_path.exists():
-        raise FileNotFoundError(f"Content file not found: {content_path}")
+    content_path = None
+    for path in base_paths:
+        if path.exists():
+            content_path = path
+            break
+    
+    if not content_path:
+        # Try to find it by searching
+        possible_paths = [str(p) for p in base_paths]
+        raise FileNotFoundError(f"Content file not found: {filename}. Tried: {possible_paths}")
     
     with open(content_path, 'r', encoding='utf-8') as f:
         return json.load(f)

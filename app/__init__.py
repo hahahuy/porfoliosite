@@ -28,12 +28,18 @@ def create_app(config_name=None):
     
     # Create database tables
     with app.app_context():
-        # Create instance directory if it doesn't exist
-        instance_path = Path(app.instance_path)
-        instance_path.mkdir(parents=True, exist_ok=True)
-        
-        # Create tables
-        db.create_all()
+        try:
+            # Create instance directory if it doesn't exist
+            instance_path = Path(app.instance_path)
+            instance_path.mkdir(parents=True, exist_ok=True)
+            
+            # Create tables
+            db.create_all()
+        except Exception as e:
+            # Log error but don't fail app startup
+            import sys
+            print(f"Warning: Database initialization error: {e}", file=sys.stderr)
+            # App will still start, database will be created on first use
     
     # Register blueprints
     from .routes.main import main_bp

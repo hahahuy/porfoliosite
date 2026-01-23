@@ -1,0 +1,13 @@
+# Characteristic scales for non-dimensionalization (WP3 contract)
+# Optimized for O(1) values in trajectory optimization
+scales:
+  L:  10000.0        # m        (target altitude / characteristic length)
+  V:  313.0          # m/s      (≈ sqrt(g0 * L))
+  T:  31.62          # s        (≈ L / V)
+  M:  50.0           # kg       (nominal wet mass)
+  F:  490.0          # N        (≈ M * g0)
+  W:  0.0316         # 1/s      (= 1 / T, angular-rate scale)
+  
+  # Optional but useful:
+  N:  588.0          # N·m      (= F * l_ref; e.g., l_ref ≈ 1.2 m → 588)
+  RHO: 1.225         # kg/m^3   (sea-level density; only for monitors, usually not needed in net)

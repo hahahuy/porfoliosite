@@ -1,0 +1,328 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} | Portfolio{% endblock %}
+
+{% block content %}
+<div class="md:flex md:gap-0 max-w-7xl mx-auto">
+  <div class="sm:p-4 p-2 w-full">
+    
+    <!-- Back button -->
+    <div class="mb-6">
+      <a href="/" class="text-blue-600 hover:text-blue-800 inline-flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Portfolio
+      </a>
+    </div>
+
+    <!-- Project Header -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ project.title }}</h1>
+      
+      {% if project.image %}
+      <img src="{{ project.image }}" alt="{{ project.title }}" class="w-full h-64 object-cover rounded-lg mb-4">
+      {% endif %}
+      
+      <p class="text-lg text-gray-700 mb-4">{{ project.description }}</p>
+      
+      {% if project.tags %}
+      <div class="flex flex-wrap gap-2 mb-4">
+        {% for tag in project.tags %}
+        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">{{ tag }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Project Details -->
+    {% if project.overview %}
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Overview</h2>
+      <p class="text-gray-700 leading-relaxed">{{ project.overview }}</p>
+      <p class="text-gray-700 leading-relaxed mt-4">The project sits at the intersection of classical mechanics and rocket dynamics, machine learning and neural networks, and Physics Informed Neural Networks (PINNs). The primary objective is to build models that are both <strong>accurate</strong> and <strong>physically consistent</strong>, serving as fast surrogate models for simulation and analysis.</p>
+    </div>
+    {% endif %}
+
+    {% if project.motivation %}
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Motivation</h2>
+      <p class="text-gray-700 leading-relaxed">{{ project.motivation }}</p>
+      <p class="text-gray-700 leading-relaxed mt-4">This project explores a hybrid approach where physical laws guide the learning process, neural networks approximate system dynamics, and learned models remain consistent with mechanics such as kinematics and force balance.</p>
+    </div>
+    {% endif %}
+
+    {% if project.core_ideas %}
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Core Ideas</h2>
+      <ul class="list-disc list-inside text-gray-700 space-y-2">
+        {% for idea in project.core_ideas %}
+        <li>{{ idea }}</li>
+        {% endfor %}
+      </ul>
+      <p class="text-gray-700 mt-4">Instead of minimizing prediction error alone, training incorporates additional constraints derived from physics, such as time derivatives matching known kinematic relationships and consistency between predicted states. This reduces unphysical behavior and improves generalization.</p>
+    </div>
+    {% endif %}
+
+    <!-- Model Interface Section -->
+    {% if project.id == 1 %}
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Model Interface</h2>
+      <p class="text-gray-700 mb-4">The Physics Informed Neural Network (PINN) model predicts a <strong>14-dimensional state vector</strong> at each time step, representing the complete rocket state including position, velocity, attitude, angular velocity, and mass.</p>
+      
+      <div class="bg-gray-50 rounded-lg p-4 mb-4">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">State Vector Format</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-sm">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="px-3 py-2 text-left">Index</th>
+                <th class="px-3 py-2 text-left">Variable</th>
+                <th class="px-3 py-2 text-left">Symbol</th>
+                <th class="px-3 py-2 text-left">Description</th>
+                <th class="px-3 py-2 text-left">Units</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-700">
+              <tr class="border-b"><td class="px-3 py-2">0-2</td><td class="px-3 py-2">Position</td><td class="px-3 py-2">[x, y, z]</td><td class="px-3 py-2">3D position coordinates</td><td class="px-3 py-2">meters (m)</td></tr>
+              <tr class="border-b"><td class="px-3 py-2">3-5</td><td class="px-3 py-2">Velocity</td><td class="px-3 py-2">[vx, vy, vz]</td><td class="px-3 py-2">3D velocity components</td><td class="px-3 py-2">m/s</td></tr>
+              <tr class="border-b"><td class="px-3 py-2">6-9</td><td class="px-3 py-2">Quaternion</td><td class="px-3 py-2">[q0, q1, q2, q3]</td><td class="px-3 py-2">Attitude quaternion</td><td class="px-3 py-2">dimensionless</td></tr>
+              <tr class="border-b"><td class="px-3 py-2">10-12</td><td class="px-3 py-2">Angular Velocity</td><td class="px-3 py-2">[wx, wy, wz]</td><td class="px-3 py-2">Angular velocity components</td><td class="px-3 py-2">rad/s</td></tr>
+              <tr class="border-b"><td class="px-3 py-2">13</td><td class="px-3 py-2">Mass</td><td class="px-3 py-2">m</td><td class="px-3 py-2">Rocket mass</td><td class="px-3 py-2">kilograms (kg)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Context Parameters Section -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Context Parameters</h2>
+      <p class="text-gray-700 mb-4">The model uses a context vector encoding scenario-specific physical parameters. These parameters define the rocket's physical properties and environmental conditions.</p>
+      <div class="bg-gray-50 rounded-lg p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div><strong>m0 (Initial mass):</strong> 45-65 kg</div>
+          <div><strong>Isp (Specific impulse):</strong> 220-280 s</div>
+          <div><strong>Cd (Drag coefficient):</strong> 0.25-0.45</div>
+          <div><strong>CL_alpha (Lift curve slope):</strong> 2.5-4.5 1/rad</div>
+          <div><strong>Cm_alpha (Pitch moment):</strong> -1.2 to -0.4 1/rad</div>
+          <div><strong>Tmax (Maximum thrust):</strong> 3000-5000 N</div>
+          <div><strong>wind_mag (Wind magnitude):</strong> 0-15 m/s</div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- ML Demo Section (only for project ID 1) -->
+    {% if project.id == 1 %}
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Interactive Demo</h2>
+      <p class="text-gray-700 mb-6">Try the Physics Informed Neural Network model for rocket dynamics prediction. Adjust the parameters below and click "Predict Trajectory" to see the model's prediction.</p>
+      
+      <div id="demo-container" class="space-y-4">
+        <!-- Rocket Parameters -->
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Rocket Parameters</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Initial Mass (m0) - kg</label>
+              <input type="number" id="m0" value="55" step="0.1" min="45" max="65" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <p class="text-xs text-gray-500 mt-1">Range: 45-65 kg</p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Specific Impulse (Isp) - s</label>
+              <input type="number" id="Isp" value="250" step="1" min="220" max="280" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <p class="text-xs text-gray-500 mt-1">Range: 220-280 s</p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Drag Coefficient (Cd)</label>
+              <input type="number" id="Cd" value="0.35" step="0.01" min="0.25" max="0.45" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <p class="text-xs text-gray-500 mt-1">Range: 0.25-0.45</p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Lift Curve Slope (CL_alpha) - 1/rad</label>
+              <input type="number" id="CL_alpha" value="3.5" step="0.1" min="2.5" max="4.5" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <p class="text-xs text-gray-500 mt-1">Range: 2.5-4.5 1/rad</p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Pitch Moment Coefficient (Cm_alpha) - 1/rad</label>
+              <input type="number" id="Cm_alpha" value="-0.8" step="0.1" min="-1.2" max="-0.4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <p class="text-xs text-gray-500 mt-1">Range: -1.2 to -0.4 1/rad</p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Maximum Thrust (Tmax) - N</label>
+              <input type="number" id="Tmax" value="4000" step="100" min="3000" max="5000" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <p class="text-xs text-gray-500 mt-1">Range: 3000-5000 N</p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Wind Magnitude (wind_mag) - m/s</label>
+              <input type="number" id="wind_mag" value="5" step="0.5" min="0" max="15" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <p class="text-xs text-gray-500 mt-1">Range: 0-15 m/s</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Time Parameters -->
+        <div class="border-t pt-4">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Time Configuration</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Start Time (t_start) - s</label>
+              <input type="number" id="t_start" value="0" step="0.1" min="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">End Time (t_end) - s</label>
+              <input type="number" id="t_end" value="30" step="0.1" min="0.1" max="60" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Time Step (dt) - s</label>
+              <input type="number" id="dt" value="0.02" step="0.01" min="0.01" max="0.1" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <p class="text-xs text-gray-500 mt-1">Typical: 0.02 (50 Hz)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Predict Button -->
+        <div class="flex justify-center pt-4">
+          <button id="predict-btn" class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+            Predict Trajectory
+          </button>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="hidden text-center py-4">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <p class="mt-2 text-gray-600">Computing trajectory...</p>
+        </div>
+
+        <!-- Results -->
+        <div id="results" class="hidden bg-gray-50 rounded-lg p-4 border border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Prediction Results</h3>
+          <div id="results-content" class="text-gray-700"></div>
+        </div>
+
+        <!-- Error Message -->
+        <div id="error" class="hidden bg-red-50 border border-red-200 rounded-lg p-4">
+          <p id="error-message" class="text-red-800"></p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if project.id == 1 %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const predictBtn = document.getElementById('predict-btn');
+  const loading = document.getElementById('loading');
+  const results = document.getElementById('results');
+  const resultsContent = document.getElementById('results-content');
+  const error = document.getElementById('error');
+  const errorMessage = document.getElementById('error-message');
+
+  predictBtn.addEventListener('click', async function() {
+    // Hide previous results/errors
+    results.classList.add('hidden');
+    error.classList.add('hidden');
+    loading.classList.remove('hidden');
+    predictBtn.disabled = true;
+
+    // Collect input values matching model API
+    const inputData = {
+      m0: parseFloat(document.getElementById('m0').value),
+      Isp: parseFloat(document.getElementById('Isp').value),
+      Cd: parseFloat(document.getElementById('Cd').value),
+      CL_alpha: parseFloat(document.getElementById('CL_alpha').value),
+      Cm_alpha: parseFloat(document.getElementById('Cm_alpha').value),
+      Tmax: parseFloat(document.getElementById('Tmax').value),
+      wind_mag: parseFloat(document.getElementById('wind_mag').value),
+      t_start: parseFloat(document.getElementById('t_start').value),
+      t_end: parseFloat(document.getElementById('t_end').value),
+      dt: parseFloat(document.getElementById('dt').value)
+    };
+
+    try {
+      const response = await fetch('/api/ml/projects/1/predict', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ data: inputData })
+      });
+
+      const data = await response.json();
+
+      loading.classList.add('hidden');
+      predictBtn.disabled = false;
+
+      if (!response.ok) {
+        throw new Error(data.error || data.message || 'Prediction failed');
+      }
+
+      // Display results
+      if (data.trajectory && data.trajectory.length > 0) {
+        let html = '<div class="space-y-4">';
+        
+        // Summary
+        html += '<div class="bg-white rounded p-3 mb-4">';
+        html += '<p class="font-semibold mb-2">Summary:</p>';
+        html += `<p>Total time: ${data.simulation_params.total_time.toFixed(2)}s | Points: ${data.simulation_params.num_points}</p>`;
+        if (data.final_position) {
+          html += `<p>Final position: (${data.final_position.x.toFixed(2)}, ${data.final_position.y.toFixed(2)}, ${data.final_position.z.toFixed(2)}) m</p>`;
+        }
+        if (data.final_velocity) {
+          html += `<p>Final velocity: (${data.final_velocity.x.toFixed(2)}, ${data.final_velocity.y.toFixed(2)}, ${data.final_velocity.z.toFixed(2)}) m/s</p>`;
+        }
+        if (data.final_mass !== undefined) {
+          html += `<p>Final mass: ${data.final_mass.toFixed(2)} kg</p>`;
+        }
+        html += '</div>';
+        
+        // Trajectory table
+        html += '<p class="font-semibold mb-2">Trajectory Points (showing first 20):</p>';
+        html += '<div class="max-h-96 overflow-y-auto">';
+        html += '<table class="min-w-full text-sm border-collapse">';
+        html += '<thead><tr class="bg-gray-100 sticky top-0">';
+        html += '<th class="px-2 py-1 text-left border">Time (s)</th>';
+        html += '<th class="px-2 py-1 text-left border">Position (m)</th>';
+        html += '<th class="px-2 py-1 text-left border">Velocity (m/s)</th>';
+        html += '<th class="px-2 py-1 text-left border">Mass (kg)</th>';
+        html += '</tr></thead><tbody>';
+        
+        const displayCount = Math.min(20, data.trajectory.length);
+        for (let i = 0; i < displayCount; i++) {
+          const point = data.trajectory[i];
+          html += `<tr class="border-b"><td class="px-2 py-1 border">${point.time.toFixed(2)}</td>`;
+          html += `<td class="px-2 py-1 border">(${point.position.x.toFixed(2)}, ${point.position.y.toFixed(2)}, ${point.position.z.toFixed(2)})</td>`;
+          html += `<td class="px-2 py-1 border">(${point.velocity.x.toFixed(2)}, ${point.velocity.y.toFixed(2)}, ${point.velocity.z.toFixed(2)})</td>`;
+          html += `<td class="px-2 py-1 border">${point.mass.toFixed(2)}</td></tr>`;
+        }
+        
+        if (data.trajectory.length > displayCount) {
+          html += `<tr><td colspan="4" class="px-2 py-1 text-center text-gray-500">... and ${data.trajectory.length - displayCount} more points</td></tr>`;
+        }
+        
+        html += '</tbody></table></div>';
+        html += '</div>';
+        
+        resultsContent.innerHTML = html;
+        results.classList.remove('hidden');
+      } else {
+        resultsContent.innerHTML = '<pre class="whitespace-pre-wrap">' + JSON.stringify(data, null, 2) + '</pre>';
+        results.classList.remove('hidden');
+      }
+    } catch (err) {
+      loading.classList.add('hidden');
+      predictBtn.disabled = false;
+      errorMessage.textContent = err.message || 'An error occurred while making the prediction.';
+      error.classList.remove('hidden');
+    }
+  });
+});
+</script>
+{% endif %}
+{% endblock %}

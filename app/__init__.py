@@ -46,11 +46,13 @@ def create_app(config_name=None):
     from .routes.projects import projects_bp
     from .routes.proxy import proxy_bp
     from .routes.contact import contact_bp
+    from .routes.ml_api import ml_api_bp
     
     app.register_blueprint(main_bp)
     app.register_blueprint(projects_bp)
     app.register_blueprint(proxy_bp)
     app.register_blueprint(contact_bp)
+    app.register_blueprint(ml_api_bp)
     
     # Register error handlers
     @app.errorhandler(404)

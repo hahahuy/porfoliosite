@@ -9,11 +9,42 @@
   },
   {
     "id": 1,
-    "title": "Domesticated Animal Image Classification with Python",
-    "description": "In this use case, my colleagues and I collaborated on creating and optimizing a convolutional neural network in order to identify domesticated animals versus non-domesticated animals to assist in funding suggestions for local animal shelters. Using the CIFAR-10 dataset with over 60,000 images,...",
-    "image": "/static/images/header.png",
-    "tags": ["Scikit-Learn", "Tensorflow", "Pandas", "Python", "Jupyter"],
-    "link": "/projects/1"
+    "title": "Physics Informed Learning for Rocket Dynamics",
+    "description": "An undergraduate research project exploring physics informed and data driven modeling of rocket flight dynamics. The work investigates how neural networks can learn system behavior while explicitly respecting known physical laws, serving as fast surrogate models for simulation and analysis.",
+    "image": "/static/images/rockettraj.jpg",
+    "tags": ["Python", "Physics Informed Neural Networks", "PINNs", "Machine Learning", "Rocket Dynamics", "Classical Mechanics"],
+    "link": "/projects/1",
+    "overview": "This repository contains an undergraduate research project exploring physics informed and data driven modeling of rocket flight dynamics. The work investigates how neural networks can learn system behavior while explicitly respecting known physical laws.",
+    "motivation": "Traditional rocket trajectory simulation relies on analytical equations solved numerically. While accurate, these approaches can be computationally heavy and difficult to integrate into learning based pipelines. Pure data driven models are flexible but often violate physical constraints. This project explores a hybrid approach where physical laws guide the learning process.",
+    "core_ideas": [
+      "Learning rocket motion from simulated or generated data",
+      "Embedding physics constraints directly into loss functions",
+      "Enforcing relationships such as position-velocity consistency and velocity-acceleration consistency",
+      "Comparing physics informed models with purely data driven baselines"
+    ],
+    "technologies": ["Python", "Neural Networks", "Physics Informed Neural Networks (PINNs)", "Classical Mechanics", "Rocket Dynamics"],
+    "model_info": {
+      "type": "Direction AN PINN",
+      "architecture": "Shared stem with mission branches (translation, rotation, mass)",
+      "state_dimension": 14,
+      "state_format": {
+        "position": "Indices 0-2: [x, y, z] in meters",
+        "velocity": "Indices 3-5: [vx, vy, vz] in m/s",
+        "quaternion": "Indices 6-9: [q0, q1, q2, q3] (attitude)",
+        "angular_velocity": "Indices 10-12: [wx, wy, wz] in rad/s",
+        "mass": "Index 13: m in kg"
+      },
+      "context_parameters": [
+        "m0: Initial mass (45-65 kg)",
+        "Isp: Specific impulse (220-280 s)",
+        "Cd: Drag coefficient (0.25-0.45)",
+        "CL_alpha: Lift curve slope (2.5-4.5 1/rad)",
+        "Cm_alpha: Pitch moment coefficient (-1.2 to -0.4 1/rad)",
+        "Tmax: Maximum thrust (3000-5000 N)",
+        "wind_mag: Wind magnitude (0-15 m/s)"
+      ],
+      "normalization": "Physics-aware nondimensionalization using reference scales (L=10000m, V=313m/s, T=31.62s, M=50kg)"
+    }
   },
   {
     "id": 2,

@@ -63,13 +63,40 @@ jobs:
           key:      ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -e
-            cd $EC2_PATH
-            git pull --ff-only
+            # Check if directory exists and is a git repository
+            if [ -d "$EC2_PATH/.git" ]; then
+              # Repository exists, pull latest changes
+              cd $EC2_PATH
+              git fetch origin
+              git pull --ff-only
+            elif [ -d "$EC2_PATH" ]; then
+              # Directory exists but is not a git repository - remove and clone
+              echo "Directory exists but is not a git repository. Removing and cloning..."
+              rm -rf $EC2_PATH
+              git clone ${{ github.repositoryUrl }} $EC2_PATH
+              cd $EC2_PATH
+            else
+              # Directory doesn't exist, clone the repository
+              echo "Cloning repository to $EC2_PATH..."
+              mkdir -p $(dirname $EC2_PATH)
+              git clone ${{ github.repositoryUrl }} $EC2_PATH
+              cd $EC2_PATH
+            fi
+            # Ensure we're on the main branch
+            git checkout main || git checkout -b main origin/main
+            # Set up virtual environment if it doesn't exist
+            if [ ! -d "venv" ]; then
+              python3 -m venv venv
+            fi
             source venv/bin/activate
+            # Upgrade pip to latest version
+            pip install --upgrade pip --quiet
             # Install or update Python dependencies quietly
             pip install -r requirements.txt --quiet
             # Ensure the Flask instance folder exists (for sqlite DB or other app data)
             mkdir -p instance
+            # Ensure logs directory exists (for application logging)
+            mkdir -p logs
             # Expose the repository root to Python path
             export PYTHONPATH="$(pwd):${PYTHONPATH}"
             # Restart the systemd service for the application

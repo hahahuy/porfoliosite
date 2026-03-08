@@ -22,12 +22,13 @@ freezer = Freezer(app)
 
 # Frozen-Flask discovers static routes automatically.
 # We only need to enumerate dynamic routes manually.
+# The function name must match the blueprint-qualified endpoint: <blueprint>.<view>
 @freezer.register_generator
-def project_detail():
+def projects__project_detail():
     projects_file = Path(__file__).parent / "app" / "content" / "projects.json"
     projects = json.loads(projects_file.read_text(encoding="utf-8"))
     for project in projects:
-        yield {"project_id": project["id"]}
+        yield "projects.project_detail", {"project_id": project["id"]}
 
 
 if __name__ == "__main__":

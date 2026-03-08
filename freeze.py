@@ -13,7 +13,8 @@ from flask_frozen import Freezer
 from app import create_app
 
 app = create_app()
-app.config["FREEZER_DESTINATION"] = "build"
+# Use absolute path so the build folder is always next to freeze.py
+app.config["FREEZER_DESTINATION"] = str(Path(__file__).parent / "build")
 app.config["FREEZER_RELATIVE_URLS"] = True   # makes all hrefs relative (works on gh-pages sub-path)
 app.config["FREEZER_IGNORE_MIMETYPE_WARNINGS"] = True
 

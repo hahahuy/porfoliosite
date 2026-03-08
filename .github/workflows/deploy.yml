@@ -1,4 +1,4 @@
-name: CI & Deploy to EC2
+name: CI & Deploy to GitHub Pages
 
 on:
   pull_request:
@@ -13,23 +13,32 @@ on:
       - 'docs/**'
 
 env:
-  # Use a consistent Python version across CI and the EC2 host
   PYTHON_VERSION: '3.11'
-  # The remote deployment path on the EC2 instance
-  EC2_PATH: ${{ secrets.EC2_PATH }}
+
+# Allow the workflow to write to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment at a time; cancel in-progress runs on new push
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
+  # ─── 1. Build & Test ────────────────────────────────────────────────────────
   build:
-    name: "\U0001F9EA Build & Test"
+    name: "🧪 Build & Test"
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout full history
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up Python & cache deps
-        uses: actions/setup-python@v4
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
@@ -44,78 +53,26 @@ jobs:
           export PYTHONPATH="${GITHUB_WORKSPACE}:${PYTHONPATH}"
           pytest --maxfail=1 --disable-warnings -q
 
+      - name: Build static site
+        run: |
+          export PYTHONPATH="${GITHUB_WORKSPACE}:${PYTHONPATH}"
+          python freeze.py
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./build
+
+  # ─── 2. Deploy to GitHub Pages ──────────────────────────────────────────────
   deploy:
-    name: "\U0001F680 Deploy to EC2"
+    name: "🚀 Deploy to GitHub Pages"
     needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout latest commit
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host:     ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key:      ${{ secrets.EC2_SSH_KEY }}
-          envs: EC2_PATH
-          script: |
-            set -e
-            # Validate EC2_PATH is set
-            if [ -z "$EC2_PATH" ]; then
-              echo "Error: EC2_PATH environment variable is not set"
-              exit 1
-            fi
-            echo "Deploying to: $EC2_PATH"
-            DEPLOY_PATH="$EC2_PATH"
-            # Check if directory exists and is a git repository
-            if [ -d "$DEPLOY_PATH/.git" ]; then
-              # Repository exists, pull latest changes
-              cd "$DEPLOY_PATH"
-              git fetch origin
-              git pull --ff-only
-            elif [ -d "$DEPLOY_PATH" ]; then
-              # Directory exists but is not a git repository - remove and clone
-              echo "Directory exists but is not a git repository. Removing and cloning..."
-              rm -rf "$DEPLOY_PATH"
-              git clone ${{ github.repositoryUrl }} "$DEPLOY_PATH"
-              cd "$DEPLOY_PATH"
-            else
-              # Directory doesn't exist, clone the repository
-              echo "Cloning repository to $DEPLOY_PATH..."
-              # Create parent directory if DEPLOY_PATH contains a path separator
-              if echo "$DEPLOY_PATH" | grep -q '/'; then
-                PARENT_DIR=$(dirname "$DEPLOY_PATH")
-                if [ -n "$PARENT_DIR" ] && [ "$PARENT_DIR" != "." ] && [ "$PARENT_DIR" != "$DEPLOY_PATH" ]; then
-                  mkdir -p "$PARENT_DIR"
-                fi
-              fi
-              git clone ${{ github.repositoryUrl }} "$DEPLOY_PATH"
-              cd "$DEPLOY_PATH"
-            fi
-            # Ensure we're on the main branch
-            git checkout main || git checkout -b main origin/main
-            # Set up virtual environment if it doesn't exist
-            if [ ! -d "venv" ]; then
-              python3 -m venv venv
-            fi
-            source venv/bin/activate
-            # Upgrade pip to latest version
-            pip install --upgrade pip --quiet
-            # Install or update Python dependencies quietly
-            pip install -r requirements.txt --quiet
-            # Ensure the Flask instance folder exists (for sqlite DB or other app data)
-            mkdir -p instance
-            # Ensure logs directory exists (for application logging)
-            mkdir -p logs
-            # Expose the repository root to Python path
-            export PYTHONPATH="$(pwd):${PYTHONPATH}"
-            # Restart the systemd service for the application
-            sudo systemctl restart myapp
-            # Allow a brief pause for the service to become ready
-            sleep 2
-            # Perform a basic health check; if it fails, note the failure in the logs
-            curl -fsS --max-time 5 http://localhost:8000/health || echo "Health check failed"
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

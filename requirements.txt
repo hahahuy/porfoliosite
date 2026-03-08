@@ -9,3 +9,4 @@ torch
 pyyaml
 numpy
 h5py
+Frozen-Flask==1.0.2
